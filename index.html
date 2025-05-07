@@ -1,439 +1,257 @@
-import { useState } from "react";
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quickscan Tool – Optoppen</title>
+  <!-- React UMD -->
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <!-- Babel standalone for in-browser transpilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-const questions = [
-  // Elk aspect bevat nu ook een praktische tip
-  {
-    id: "stakeholders",
-    text: "Zijn alle stakeholders geïdentificeerd en is er voldoende steun?",
-    explanation:
-      "Zonder betrokkenheid en draagvlak van stakeholders kan het project vertragen of zelfs stoppen.",
-    tip: "Identificeer en betrek partijen zoals woningcorporatie, gemeente, omwonenden en investeerders.",
-    yesResult:
-      "Er is voldoende draagvlak, wat een goede basis vormt voor voortgang.",
-    noResult:
-      "Er moet meer draagvlak en betrokkenheid van stakeholders worden gecreëerd.",
-  },
-  {
-    id: "constructie",
-    text: "Is de fundering sterk genoeg of kunnen lichte materialen worden gebruikt?",
-    explanation:
-      "Een stevige fundering of alternatief met lichte materialen is cruciaal voor de technische haalbaarheid.",
-    tip: "Raadpleeg bouwdossiers of een constructeur om de draagkracht van de fundering vast te stellen.",
-    yesResult: "De constructieve basis is voldoende voor optoppen.",
-    noResult: "De fundering of constructie moet versterkt of aangepast worden.",
-  },
-  {
-    id: "kostenbaten",
-    text: "Zijn de kosten significant lager dan sloop/nieuwbouw?",
-    explanation:
-      "Een positieve kosten-batenverhouding maakt het project financieel aantrekkelijk.",
-    tip: "Gebruik een TCO-berekening over 30 jaar en kijk naar subsidies zoals de Woningbouwimpuls.",
-    yesResult: "Financieel aantrekkelijk alternatief voor nieuwbouw.",
-    noResult:
-      "Kosten zijn mogelijk te hoog; herzie de begroting of onderzoek subsidies.",
-  },
-  {
-    id: "juridisch",
-    text: "Is het juridisch mogelijk (bijv. bestemmingsplan)?",
-    explanation:
-      "Juridische belemmeringen kunnen het hele project stilleggen. Vroegtijdige toetsing is essentieel.",
-    tip: "Controleer het bestemmingsplan en overleg met de gemeente over vereiste procedures.",
-    yesResult: "Juridisch staat niets het project in de weg.",
-    noResult:
-      "Er zijn juridische obstakels; overleg met gemeente of pas bestemmingsplan aan.",
-  },
-  {
-    id: "ruimtelijk",
-    text: "Is er ruimte voor extra voorzieningen (parkeerplaatsen, groen)?",
-    explanation:
-      "Voldoende ruimte rondom het gebouw voorkomt conflicten met bewoners en regelgeving.",
-    tip: "Bekijk lokale parkeernormen en eisen voor groenvoorziening bij de gemeente.",
-    yesResult: "Ruimtelijk goed inpasbaar in de omgeving.",
-    noResult:
-      "Ontwerp moet aangepast worden om te voldoen aan ruimtelijke eisen.",
-  },
-  {
-    id: "participatie",
-    text: "Zijn bewoners tijdig betrokken met voldoende communicatie?",
-    explanation:
-      "Bewonersparticipatie voorkomt weerstand en draagt bij aan draagvlak voor het project.",
-    tip: "Organiseer bewonersbijeenkomsten of stuur een informatiebrief om draagvlak te vergroten.",
-    yesResult: "Er is draagvlak vanuit de bewoners.",
-    noResult: "Meer communicatie en participatie nodig met bewoners.",
-  },
-];
+  <script type="text/babel">
+    const { useState } = React;
 
-export default function QuickscanApp() {
-  const [buildingType, setBuildingType] = useState("");
-  const [hasStarted, setHasStarted] = useState(false);
-  const [answers, setAnswers] = useState({});
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showAdvice, setShowAdvice] = useState(false);
+    const questions = [
+      {
+        id: "stakeholders",
+        text: "Zijn alle stakeholders geïdentificeerd en is er voldoende steun?",
+        explanation:
+          "Zonder betrokkenheid en draagvlak van stakeholders kan het project vertragen of zelfs stoppen.",
+        tip: "Identificeer en betrek partijen zoals woningcorporatie, gemeente, omwonenden en investeerders.",
+        yesResult:
+          "Er is voldoende draagvlak, wat een goede basis vormt voor voortgang.",
+        noResult:
+          "Er moet meer draagvlak en betrokkenheid van stakeholders worden gecreëerd.",
+      },
+      {
+        id: "constructie",
+        text: "Is de fundering sterk genoeg of kunnen lichte materialen worden gebruikt?",
+        explanation:
+          "Een stevige fundering of alternatief met lichte materialen is cruciaal voor de technische haalbaarheid.",
+        tip: "Raadpleeg bouwdossiers of een constructeur om de draagkracht van de fundering vast te stellen.",
+        yesResult: "De constructieve basis is voldoende voor optoppen.",
+        noResult: "De fundering of constructie moet versterkt of aangepast worden.",
+      },
+      {
+        id: "kostenbaten",
+        text: "Zijn de kosten significant lager dan sloop/nieuwbouw?",
+        explanation:
+          "Een positieve kosten-batenverhouding maakt het project financieel aantrekkelijk.",
+        tip: "Gebruik een TCO-berekening over 30 jaar en kijk naar subsidies zoals de Woningbouwimpuls.",
+        yesResult: "Financieel aantrekkelijk alternatief voor nieuwbouw.",
+        noResult:
+          "Kosten zijn mogelijk te hoog; herzie de begroting of onderzoek subsidies.",
+      },
+      {
+        id: "juridisch",
+        text: "Is het juridisch mogelijk (bijv. bestemmingsplan)?",
+        explanation:
+          "Juridische belemmeringen kunnen het hele project stilleggen. Vroegtijdige toetsing is essentieel.",
+        tip: "Controleer het bestemmingsplan en overleg met de gemeente over vereiste procedures.",
+        yesResult: "Juridisch staat niets het project in de weg.",
+        noResult:
+          "Er zijn juridische obstakels; overleg met gemeente of pas bestemmingsplan aan.",
+      },
+      {
+        id: "ruimtelijk",
+        text: "Is er ruimte voor extra voorzieningen (parkeerplaatsen, groen)?",
+        explanation:
+          "Voldoende ruimte rondom het gebouw voorkomt conflicten met bewoners en regelgeving.",
+        tip: "Bekijk lokale parkeernormen en eisen voor groenvoorziening bij de gemeente.",
+        yesResult: "Ruimtelijk goed inpasbaar in de omgeving.",
+        noResult:
+          "Ontwerp moet aangepast worden om te voldoen aan ruimtelijke eisen.",
+      },
+      {
+        id: "participatie",
+        text: "Zijn bewoners tijdig betrokken met voldoende communicatie?",
+        explanation:
+          "Bewonersparticipatie voorkomt weerstand en draagt bij aan draagvlak voor het project.",
+        tip: "Organiseer bewonersbijeenkomsten of stuur een informatiebrief om draagvlak te vergroten.",
+        yesResult: "Er is draagvlak vanuit de bewoners.",
+        noResult: "Meer communicatie en participatie nodig met bewoners.",
+      },
+    ];
 
-  const handleAnswer = (value) => {
-    const newAnswers = { ...answers, [questions[currentIndex].id]: value };
-    setAnswers(newAnswers);
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setShowAdvice(true);
-    }
-  };
+    function QuickscanApp() {
+      const [buildingType, setBuildingType] = useState("");
+      const [hasStarted, setHasStarted] = useState(false);
+      const [answers, setAnswers] = useState({});
+      const [currentIndex, setCurrentIndex] = useState(0);
+      const [showAdvice, setShowAdvice] = useState(false);
 
-  const restart = () => {
-    setAnswers({});
-    setCurrentIndex(0);
-    setShowAdvice(false);
-  };
+      const handleAnswer = (value) => {
+        const newAnswers = { ...answers, [questions[currentIndex].id]: value };
+        setAnswers(newAnswers);
+        if (currentIndex < questions.length - 1) {
+          setCurrentIndex(currentIndex + 1);
+        } else {
+          setShowAdvice(true);
+        }
+      };
 
-  const printPage = () => {
-    window.print();
-  };
+      const restart = () => {
+        setAnswers({});
+        setCurrentIndex(0);
+        setShowAdvice(false);
+      };
 
-  const isComplete = showAdvice;
-  const score = Object.values(answers).filter((a) => a === "yes").length;
+      const printPage = () => {
+        window.print();
+      };
 
-  let advies = "";
-  const bouwlagen = parseInt(buildingType);
-  if (isComplete) {
-    if (bouwlagen < 3) {
-      advies =
-        "Let op: bij gebouwen met minder dan 3 bouwlagen zijn er mogelijk beperktere constructieve en economische voordelen. Overweeg of optoppen voldoende rendement oplevert.";
-    } else if (bouwlagen >= 3 && score === questions.length) {
-      advies =
-        "Het project is op alle vlakken positief beoordeeld en geschikt voor optoppen. Start met de planvorming en voorbereiding van vergunningen.";
-    } else if (score >= 4) {
-      advies =
-        "Het project heeft potentie, maar er zijn nog enkele aandachtspunten. Herzie de knelpunten en voer aanvullende analyses of gesprekken uit.";
-    } else {
-      advies =
-        "Het project is op meerdere belangrijke onderdelen nog onvoldoende onderbouwd of haalbaar. Aanbevolen wordt eerst de fundamentele voorwaarden te versterken.";
-    }
-  }
+      const isComplete = showAdvice;
+      const score = Object.values(answers).filter((a) => a === "yes").length;
 
-  if (!hasStarted) {
-    return (
-      <div
-        style={{
-          padding: "2rem",
-          maxWidth: "800px",
-          margin: "0 auto",
-          fontFamily: "Arial, sans-serif",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "32px",
-            fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: "2rem",
-          }}
-        >
-          Quickscan Tool – Optoppen
-        </h1>
-        <p style={{ fontSize: "18px", marginBottom: "1rem" }}>
-          <strong>
-            Selecteer het aantal bouwlagen van het appartementencomplex:
-          </strong>
-        </p>
-        <select
-          value={buildingType}
-          onChange={(e) => setBuildingType(e.target.value)}
-          style={{
-            padding: "0.75rem",
-            fontSize: "16px",
-            width: "100%",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <option value="">-- Kies aantal bouwlagen --</option>
-          <option value="2">2 bouwlagen</option>
-          <option value="3">3 bouwlagen</option>
-          <option value="4">4 bouwlagen</option>
-          <option value="5">5 bouwlagen</option>
-        </select>
-        <button
-          disabled={!buildingType}
-          onClick={() => setHasStarted(true)}
-          style={{
-            padding: "0.75rem 1.5rem",
-            backgroundColor: buildingType ? "#4caf50" : "#ccc",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            fontSize: "16px",
-          }}
-        >
-          Start scan
-        </button>
-      </div>
-    );
-  }
+      let advies = "";
+      const bouwlagen = parseInt(buildingType, 10);
+      if (isComplete) {
+        if (bouwlagen < 3) {
+          advies =
+            "Let op: bij gebouwen met minder dan 3 bouwlagen zijn er mogelijk beperktere constructieve en economische voordelen. Overweeg of optoppen voldoende rendement oplevert.";
+        } else if (bouwlagen >= 3 && score === questions.length) {
+          advies =
+            "Het project is op alle vlakken positief beoordeeld en geschikt voor optoppen. Start met de planvorming en voorbereiding van vergunningen.";
+        } else if (score >= 4) {
+          advies =
+            "Het project heeft potentie, maar er zijn nog enkele aandachtspunten. Herzie de knelpunten en voer aanvullende analyses of gesprekken uit.";
+        } else {
+          advies =
+            "Het project is op meerdere belangrijke onderdelen nog onvoldoende onderbouwd of haalbaar. Aanbevolen wordt eerst de fundamentele voorwaarden te versterken.";
+        }
+      }
 
-  return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "800px",
-        margin: "0 auto",
-        fontFamily: "Arial, sans-serif",
-        lineHeight: "1.6",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "32px",
-          fontWeight: "bold",
-          marginBottom: "1rem",
-          textAlign: "center",
-        }}
-      >
-        Quickscan Tool – Optoppen
-      </h1>
-      {!isComplete ? (
-        <div
-          style={{
-            border: "1px solid #ccc",
-            background: "#f9f9f9",
-            padding: "1.5rem",
-            borderRadius: "10px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            marginBottom: "2rem",
-          }}
-        >
-          <p
-            style={{
-              fontSize: "16px",
-              fontWeight: "bold",
-              marginBottom: "0.25rem",
-            }}
-          >
-            Vraag {currentIndex + 1} van {questions.length}
-          </p>
-          <p
-            style={{
-              fontSize: "20px",
-              marginBottom: "1rem",
-              fontWeight: "500",
-            }}
-          >
-            {questions[currentIndex].text}
-          </p>
-          <p
-            style={{ fontSize: "15px", color: "#666", marginBottom: "0.5rem" }}
-          >
-            {questions[currentIndex].explanation}
-          </p>
-          <p
-            style={{ fontSize: "13px", color: "#999", marginBottom: "1.5rem" }}
-          >
-            <em>{questions[currentIndex].tip}</em>
-          </p>
-          <div style={{ display: "flex", gap: "1rem" }}>
+      if (!hasStarted) {
+        return (
+          <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif" }}>
+            <h1 style={{ fontSize: "32px", fontWeight: "bold", textAlign: "center", marginBottom: "2rem" }}>
+              Quickscan Tool – Optoppen
+            </h1>
+            <p style={{ fontSize: "18px", marginBottom: "1rem" }}>
+              <strong>Selecteer het aantal bouwlagen van het appartementencomplex:</strong>
+            </p>
+            <select
+              value={buildingType}
+              onChange={(e) => setBuildingType(e.target.value)}
+              style={{ padding: "0.75rem", fontSize: "16px", width: "100%", marginBottom: "1.5rem" }}
+            >
+              <option value="">-- Kies aantal bouwlagen --</option>
+              <option value="2">2 bouwlagen</option>
+              <option value="3">3 bouwlagen</option>
+              <option value="4">4 bouwlagen</option>
+              <option value="5">5 bouwlagen</option>
+            </select>
             <button
-              onClick={() => handleAnswer("yes")}
+              disabled={!buildingType}
+              onClick={() => setHasStarted(true)}
               style={{
                 padding: "0.75rem 1.5rem",
-                backgroundColor: "#4caf50",
+                backgroundColor: buildingType ? "#4caf50" : "#ccc",
                 color: "white",
                 border: "none",
                 borderRadius: "5px",
                 fontSize: "16px",
               }}
             >
-              Ja
-            </button>
-            <button
-              onClick={() => handleAnswer("no")}
-              style={{
-                padding: "0.75rem 1.5rem",
-                backgroundColor: "#f44336",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                fontSize: "16px",
-              }}
-            >
-              Nee
+              Start scan
             </button>
           </div>
+        );
+      }
+
+      return (
+        <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto", fontFamily: "Arial, sans-serif", lineHeight: "1.6" }}>
+          <h1 style={{ fontSize: "32px", fontWeight: "bold", marginBottom: "1rem", textAlign: "center" }}>
+            Quickscan Tool – Optoppen
+          </h1>
+          {!isComplete ? (
+            <div style={{ border: "1px solid #ccc", background: "#f9f9f9", padding: "1.5rem", borderRadius: "10px", boxShadow: "0 2px 8px rgba(0,0,0,0.05)", marginBottom: "2rem" }}>
+              <p style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "0.25rem" }}>
+                Vraag {currentIndex + 1} van {questions.length}
+              </p>
+              <p style={{ fontSize: "20px", marginBottom: "1rem", fontWeight: "500" }}>
+                {questions[currentIndex].text}
+              </p>
+              <p style={{ fontSize: "15px", color: "#666", marginBottom: "0.5rem" }}>
+                {questions[currentIndex].explanation}
+              </p>
+              <p style={{ fontSize: "13px", color: "#999", marginBottom: "1.5rem" }}>
+                <em>{questions[currentIndex].tip}</em>
+              </p>
+              <div style={{ display: "flex", gap: "1rem" }}>
+                <button onClick={() => handleAnswer("yes")} style={{ padding: "0.75rem 1.5rem", backgroundColor: "#4caf50", color: "white", border: "none", borderRadius: "5px", fontSize: "16px" }}>
+                  Ja
+                </button>
+                <button onClick={() => handleAnswer("no")} style={{ padding: "0.75rem 1.5rem", backgroundColor: "#f44336", color: "white", border: "none", borderRadius: "5px", fontSize: "16px" }}>
+                  Nee
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div style={{ border: "1px solid #ccc", background: "#ffffff", padding: "2rem", borderRadius: "10px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
+              <h2 style={{ fontSize: "24px", fontWeight: "bold", marginBottom: "1rem" }}>Resultaat en advies</h2>
+              <p style={{ fontSize: "16px", color: "#333", marginBottom: "1rem" }}>
+                <strong>Advies:</strong> {advies}
+              </p>
+              <p style={{ fontSize: "16px", color: "#333", marginTop: "2rem", fontWeight: "bold" }}>
+                Toelichting op elke vraag (op basis van jouw antwoorden):
+              </p>
+              <div style={{ marginTop: "1rem" }}>
+                {["constructie","kostenbaten","juridisch","ruimtelijk"].map(section => (
+                  <div key={section}>
+                    <h3 style={{ fontSize: "18px", fontWeight: "bold", marginTop: "1rem" }}>
+                      { section === "constructie" ? "Technisch"
+                        : section === "kostenbaten" ? "Financieel"
+                        : section === "juridisch"   ? "Juridisch"
+                        : "Ruimtelijk" }
+                    </h3>
+                    <ul style={{ paddingLeft: "1rem" }}>
+                      {questions.filter(q => q.id === section).map(q => (
+                        <li key={q.id} style={{ marginBottom: "1rem" }}>
+                          <strong>{q.text}</strong><br/>
+                          <span style={{ color: "#555" }}>
+                            {answers[q.id] === "yes" ? q.yesResult : q.noResult}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+                <h3 style={{ fontSize: "18px", fontWeight: "bold", marginTop: "1rem" }}>Sociaal</h3>
+                <ul style={{ paddingLeft: "1rem" }}>
+                  {questions.filter(q => ["stakeholders","participatie"].includes(q.id)).map(q => (
+                    <li key={q.id} style={{ marginBottom: "1rem" }}>
+                      <strong>{q.text}</strong><br/>
+                      <span style={{ color: "#555" }}>
+                        {answers[q.id] === "yes" ? q.yesResult : q.noResult}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
+                <button onClick={restart} style={{ padding: "0.75rem 1.5rem", backgroundColor: "#2196f3", color: "white", border: "none", borderRadius: "5px", fontSize: "16px" }}>
+                  Herstart
+                </button>
+                <button onClick={printPage} style={{ padding: "0.75rem 1.5rem", backgroundColor: "#673ab7", color: "white", border: "none", borderRadius: "5px", fontSize: "16px" }}>
+                  Download / Print
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      ) : (
-        <div
-          style={{
-            border: "1px solid #ccc",
-            background: "#ffffff",
-            padding: "2rem",
-            borderRadius: "10px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-          }}
-        >
-          <h2
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              marginBottom: "1rem",
-            }}
-          >
-            Resultaat en advies
-          </h2>
-          <p style={{ fontSize: "16px", color: "#333", marginBottom: "1rem" }}>
-            <strong>Advies:</strong> {advies}
-          </p>
-          <p
-            style={{
-              fontSize: "16px",
-              color: "#333",
-              marginTop: "2rem",
-              fontWeight: "bold",
-            }}
-          >
-            Toelichting op elke vraag (op basis van jouw antwoorden):
-          </p>
-          <div style={{ marginTop: "1rem" }}>
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginTop: "1rem",
-              }}
-            >
-              Technisch
-            </h3>
-            <ul style={{ paddingLeft: "1rem" }}>
-              {questions
-                .filter((q) => ["constructie"].includes(q.id))
-                .map((q) => (
-                  <li key={q.id} style={{ marginBottom: "1rem" }}>
-                    <strong>{q.text}</strong>
-                    <br />
-                    <span style={{ color: "#555" }}>
-                      {answers[q.id] === "yes" ? q.yesResult : q.noResult}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginTop: "1rem",
-              }}
-            >
-              Financieel
-            </h3>
-            <ul style={{ paddingLeft: "1rem" }}>
-              {questions
-                .filter((q) => ["kostenbaten"].includes(q.id))
-                .map((q) => (
-                  <li key={q.id} style={{ marginBottom: "1rem" }}>
-                    <strong>{q.text}</strong>
-                    <br />
-                    <span style={{ color: "#555" }}>
-                      {answers[q.id] === "yes" ? q.yesResult : q.noResult}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginTop: "1rem",
-              }}
-            >
-              Juridisch
-            </h3>
-            <ul style={{ paddingLeft: "1rem" }}>
-              {questions
-                .filter((q) => ["juridisch"].includes(q.id))
-                .map((q) => (
-                  <li key={q.id} style={{ marginBottom: "1rem" }}>
-                    <strong>{q.text}</strong>
-                    <br />
-                    <span style={{ color: "#555" }}>
-                      {answers[q.id] === "yes" ? q.yesResult : q.noResult}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginTop: "1rem",
-              }}
-            >
-              Ruimtelijk
-            </h3>
-            <ul style={{ paddingLeft: "1rem" }}>
-              {questions
-                .filter((q) => ["ruimtelijk"].includes(q.id))
-                .map((q) => (
-                  <li key={q.id} style={{ marginBottom: "1rem" }}>
-                    <strong>{q.text}</strong>
-                    <br />
-                    <span style={{ color: "#555" }}>
-                      {answers[q.id] === "yes" ? q.yesResult : q.noResult}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-            <h3
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold",
-                marginTop: "1rem",
-              }}
-            >
-              Sociaal
-            </h3>
-            <ul style={{ paddingLeft: "1rem" }}>
-              {questions
-                .filter((q) => ["stakeholders", "participatie"].includes(q.id))
-                .map((q) => (
-                  <li key={q.id} style={{ marginBottom: "1rem" }}>
-                    <strong>{q.text}</strong>
-                    <br />
-                    <span style={{ color: "#555" }}>
-                      {answers[q.id] === "yes" ? q.yesResult : q.noResult}
-                    </span>
-                  </li>
-                ))}
-            </ul>
-          </div>
-          <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
-            <button
-              onClick={restart}
-              style={{
-                padding: "0.75rem 1.5rem",
-                backgroundColor: "#2196f3",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                fontSize: "16px",
-              }}
-            >
-              Herstart
-            </button>
-            <button
-              onClick={printPage}
-              style={{
-                padding: "0.75rem 1.5rem",
-                backgroundColor: "#673ab7",
-                color: "white",
-                border: "none",
-                borderRadius: "5px",
-                fontSize: "16px",
-              }}
-            >
-              Download / Print
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+      );
+    }
 
-
+    ReactDOM.createRoot(document.getElementById("root")).render(<QuickscanApp />);
+  </script>
+</body>
+</html>
